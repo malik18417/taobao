@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Salary Calculator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            padding: 30px;
+            position: relative;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border 0.3s;
+        }
+        
+        input:focus, select:focus {
+            border-color: #3498db;
+            outline: none;
+            box-shadow: 0 0 5px rgba(52, 152, 219, 0.3);
+        }
+        
+        button {
+            background: linear-gradient(to right, #3498db, #2c3e50);
+            color: white;
+            border: none;
+            padding: 15px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            width: 100%;
+            transition: all 0.3s;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .results {
+            margin-top: 30px;
+            padding: 25px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 10px;
+            display: none;
+            border-left: 5px solid #3498db;
+        }
+        
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid #eaeaea;
+        }
+        
+        .result-label {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        .total-salary {
+            font-size: 22px;
+            font-weight: 700;
+            color: #27ae60;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 2px solid #27ae60;
+        }
+        
+        .error {
+            color: #e74c3c;
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+        
+        .developer-info {
+            margin-top: 40px;
+            padding: 25px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 10px;
+            text-align: center;
+            border-top: 3px solid #3498db;
+        }
+        
+        .developer-info h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+        
+        .developer-info p {
+            margin-bottom: 15px;
+            color: #555;
+        }
+        
+        .whatsapp-link {
+            display: inline-flex;
+            align-items: center;
+            background: linear-gradient(to right, #25D366, #128C7E);
+            color: white;
+            text-decoration: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s;
+            box-shadow: 0 4px 8px rgba(37, 211, 102, 0.3);
+        }
+        
+        .whatsapp-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(37, 211, 102, 0.4);
+        }
+        
+        .whatsapp-link i {
+            margin-right: 8px;
+            font-size: 20px;
+        }
+        
+        .info-text {
+            font-size: 14px;
+            color: #7f8c8d;
+            margin-top: 5px;
+            font-style: italic;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Salary Calculator</h1>
+        
+        <form id="salaryForm">
+            <div class="form-group">
+                <label for="totalDays">Total Working Days in Month</label>
+                <input type="number" id="totalDays" min="1" max="31" required>
+                <div class="info-text">Enter total working days (1-31)</div>
+                <div class="error" id="totalDaysError">Please enter a valid number of days (1-31)</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="absentDays">Number of Absent Days</label>
+                <input type="number" id="absentDays" min="0" required>
+                <div class="error" id="absentDaysError">Please enter a valid number of absent days</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="overtime">Total Overtime Hours</label>
+                <input type="number" id="overtime" min="0" step="0.5" required>
+                <div class="error" id="overtimeError">Please enter a valid overtime value</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="socialSecurity">Do you have a Social Security Card?</label>
+                <select id="socialSecurity" required>
+                    <option value="">Select an option</option>
+                    <option value="yes">Yes</option>
+                    <option value="no">No</option>
+                </select>
+                <div class="error" id="socialSecurityError">Please select an option</div>
+            </div>
+            
+            <button type="submit">Calculate Salary</button>
+        </form>
+        
+        <div class="results" id="results">
+            <h2>Salary Breakdown</h2>
+            
+            <div class="result-item">
+                <span class="result-label">Base Salary:</span>
+                <span id="baseSalary">0</span>
+            </div>
+            
+            <div class="result-item">
+                <span class="result-label">Overtime Pay:</span>
+                <span id="overtimePay">0</span>
+            </div>
+            
+            <div class="result-item">
+                <span class="result-label">Social Security Deduction:</span>
+                <span id="securityDeduction">0</span>
+            </div>
+            
+            <div class="result-item">
+                <span class="result-label">Allowance Deduction:</span>
+                <span id="allowanceDeduction">0</span>
+            </div>
+            
+            <div class="result-item total-salary">
+                <span class="result-label">Total Salary:</span>
+                <span id="totalSalary">0</span>
+            </div>
+        </div>
+        
+        <div class="developer-info">
+            <h3>About the developer</h3>
+            <p>This application was developed by:</p>
+            <p><strong>Zahid iqbal</strong></p>
+            <a href="https://wa.me/923404193796" class="whatsapp-link" target="_blank">
+                <i class="fab fa-whatsapp"></i> Contact on WhatsApp
+            </a>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('salaryForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Reset error messages
+            document.querySelectorAll('.error').forEach(error => {
+                error.style.display = 'none';
+            });
+            
+            // Get form values
+            const totalDays = parseInt(document.getElementById('totalDays').value);
+            const absentDays = parseInt(document.getElementById('absentDays').value);
+            const overtime = parseFloat(document.getElementById('overtime').value);
+            const socialSecurity = document.getElementById('socialSecurity').value;
+            
+            // Validate inputs
+            let isValid = true;
+            
+            if (isNaN(totalDays) || totalDays <= 0 || totalDays > 31) {
+                document.getElementById('totalDaysError').style.display = 'block';
+                isValid = false;
+            }
+            
+            if (isNaN(absentDays) || absentDays < 0 || absentDays > totalDays) {
+                document.getElementById('absentDaysError').textContent = 'Absent days cannot be more than total days';
+                document.getElementById('absentDaysError').style.display = 'block';
+                isValid = false;
+            }
+            
+            if (isNaN(overtime) || overtime < 0) {
+                document.getElementById('overtimeError').style.display = 'block';
+                isValid = false;
+            }
+            
+            if (!socialSecurity) {
+                document.getElementById('socialSecurityError').style.display = 'block';
+                isValid = false;
+            }
+            
+            if (!isValid) return;
+            
+            // Perform calculations based on new logic
+            const dailyRate = 25400 / totalDays;
+            let baseSalary;
+            
+            if (absentDays >= 3) {
+                if (totalDays <= 30) {
+                    if (absentDays >= 6 && absentDays <=17) {
+                        const adjustedDays = totalDays - (absentDays - 1);
+                        baseSalary = adjustedDays * dailyRate;
+                    }
+                   if (absentDays > 17) {
+                       const adjustedDays = totalDays - (absentDays - 0);
+                       baseSalary = adjustedDays * dailyRate;
+                   }
+                   if (absentDays <=6)  {
+                        const adjustedDays = totalDays - (absentDays - 2);
+                        baseSalary = adjustedDays * dailyRate;
+                    }
+                }
+                if (totalDays >= 31) {
+                    if (absentDays >= 7 && absentDays <=17) {
+                        const adjustedDays = totalDays - (absentDays - 1);
+                        baseSalary = adjustedDays * dailyRate;
+                    }
+                    if (absentDays > 17) {
+                       const adjustedDays = totalDays - (absentDays - 0);
+                       baseSalary = adjustedDays * dailyRate;
+                    }
+                    if (absentDays <=7) {
+                        const adjustedDays = totalDays - (absentDays - 2);
+                        baseSalary = adjustedDays * dailyRate;
+                    }
+                }
+            } else {
+                baseSalary = 25400;
+            }
+            
+            let allowanceDeduction
+            if (absentDays === 0) {
+                allowanceDeduction = 0;
+            } else if (absentDays === 1) {
+                allowanceDeduction = 400;
+            } else if (absentDays === 2) {
+                allowanceDeduction = 800;
+            } else if (absentDays >= 3) {
+                allowanceDeduction = 800 + 280;
+            }
+            
+            const overtimePay = overtime * 130;
+            const securityDeduction = socialSecurity === 'yes' ? 400 : 0;
+            
+            const totalSalary = baseSalary + overtimePay + (1080 - allowanceDeduction) - securityDeduction;
+            
+            // Display results
+            document.getElementById('baseSalary').textContent = baseSalary.toFixed(2);
+            document.getElementById('overtimePay').textContent = overtimePay.toFixed(2);
+            document.getElementById('securityDeduction').textContent = securityDeduction.toFixed(2);
+            document.getElementById('allowanceDeduction').textContent = allowanceDeduction.toFixed(2);
+            document.getElementById('totalSalary').textContent = totalSalary.toFixed(2);
+            
+            document.getElementById('results').style.display = 'block';
+        });
+    </script>
+</body>
+</html>
